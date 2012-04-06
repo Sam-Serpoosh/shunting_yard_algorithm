@@ -24,4 +24,9 @@ describe ShuntingYardAlgorithm do
     subject.post_fix("1 - 1").should == "1 1 -"
   end
 
+  it "postfix expression with multiple operators with same precedence" do
+    subject.post_fix("1 + 2 + 3").should == "1 2 + 3 +"
+    subject.post_fix("1 - 2 + 3").should == "1 2 - 3 +"
+  end
+
 end
