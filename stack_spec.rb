@@ -50,4 +50,16 @@ describe Stack do
     subject.pop.should == 1
   end
 
+  it "peeks the top element" do
+    subject.push(1)
+    subject.peek.should == 1
+    subject.size.should == 1
+  end
+
+  it "raises empty stack exception when peek from empty stack" do
+    expect do
+      subject.peek
+    end.should raise_error(EmptyStackException)
+  end
+
 end

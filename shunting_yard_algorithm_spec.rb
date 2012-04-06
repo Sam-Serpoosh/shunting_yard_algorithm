@@ -29,6 +29,11 @@ describe ShuntingYardAlgorithm do
     algorithm.post_fix("1 - 2 + 3").should == "1 2 - 3 +"
   end
 
+  it "postfix expression with two operators with different precedence" do
+    algorithm.post_fix("1 + 2 * 3").should == "1 2 3 * +"
+    algorithm.post_fix("1 - 2 / 3").should == "1 2 3 / -"
+  end
+
   def algorithm
     ShuntingYardAlgorithm.new
   end

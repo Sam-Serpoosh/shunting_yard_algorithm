@@ -22,8 +22,16 @@ class Stack
     @elements[@size]
   end
 
+  def peek
+    raise EmptyStackException if empty? 
+    @elements[@size - 1]
+  end
+
 end
 
 
 class UnderFlowException < Exception
+end
+
+class EmptyStackException < Exception
 end

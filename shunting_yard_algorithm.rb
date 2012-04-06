@@ -1,8 +1,11 @@
+require './stack'
+
 class ShuntingYardAlgorithm
 
   def initialize
-    @output = ""
+    @output = []
     @current_operator = nil
+    @operators = Stack.new
   end
 
 
@@ -12,9 +15,9 @@ class ShuntingYardAlgorithm
 
     tokens = expression.split(/ /)
     process_tokens(tokens) 
-    append_token(@current_operator)
+    append_remaining_tokens
 
-    @output[0..-2]
+    produce_output
   end
 
   private
@@ -29,17 +32,47 @@ class ShuntingYardAlgorithm
     end
   end
 
+  def append_remaining_tokens
+    while !@operators.empty?
+      @output << @operators.pop
+    end
+  end
+
+  def produce_output
+    formatted_output = ""
+    @output.each do |token|
+      formatted_output += token + " "
+    end
+    formatted_output[0..-2]
+  end
+
   def is_number?(token)
     !!(token =~ /\d+/)
   end
 
   def append_token(token)
-    @output += token + " "
+    @output << token
   end
 
   def append_operator(token)
-    @output += @current_operator + " " unless @current_operator.nil?
-    @current_operator = token 
+    if less_precedence(token)
+      @output << @operators.pop unless @operators.empty? 
+    end
+    @operators.push(token)
+  end
+
+  def less_precedence(token)
+    return false if @operators.empty?
+    precedence(token) <= precedence(@operators.peek)
+  end
+
+  def precedence(token)
+    if token == "+" || token == "-"
+      return 1
+    elsif token == "*" || token == "/"
+      return 2
+    end
+    return 0
   end
 
 end
