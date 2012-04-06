@@ -15,4 +15,13 @@ describe ShuntingYardAlgorithm do
     subject.post_fix("2").should == "2"
   end
 
+  it "postfix simple add" do
+    subject.post_fix("1 + 1").should == "1 1 +"
+    subject.post_fix("2 + 2").should == "2 2 +"
+  end
+
+  it "postfix simple subtract" do
+    subject.post_fix("1 - 1").should == "1 1 -"
+  end
+
 end
