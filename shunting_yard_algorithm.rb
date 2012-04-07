@@ -2,25 +2,27 @@ require './stack'
 
 class ShuntingYardAlgorithm
 
-  def initialize
-    @output = []
-    @current_operator = nil
-    @operators = Stack.new
-  end
-
-
   def post_fix(expression)
+    init
     return "" if expression.nil?
-    return expression if expression.length <= 1
 
-    tokens = expression.split(/ /)
-    process_tokens(tokens) 
-    append_remaining_tokens
-
+    process(expression) 
     produce_output
   end
 
   private
+
+  def init
+    @output = []
+    @operators = Stack.new
+  end
+
+  def process(expression)
+    tokens = expression.split(/ /)
+    process_tokens(tokens) 
+    append_remaining_tokens
+  end
+
 
   def process_tokens(tokens)
     tokens.each do |token|
@@ -55,7 +57,7 @@ class ShuntingYardAlgorithm
   end
 
   def append_operator(token)
-    if less_precedence(token)
+    while less_precedence(token)
       @output << @operators.pop unless @operators.empty? 
     end
     @operators.push(token)
