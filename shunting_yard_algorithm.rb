@@ -18,15 +18,32 @@ class ShuntingYardAlgorithm
   end
 
   def process(expression)
-    tokens = expression.split(/ /)
+    tokens = extract_tokens(expression) 
     process_tokens(tokens) 
     append_remaining_tokens
   end
 
+  def extract_tokens(expression)
+    tokens = expression.split(/ /)
+    filter_tokens(tokens)
+  end
+
+
+  def filter_tokens(tokens)
+    filtered_tokens = []
+    tokens.each do |token|
+      filtered_tokens << token if !token.empty? 
+    end
+    filtered_tokens
+  end
 
   def process_tokens(tokens)
     tokens.each do |token|
-      if is_number?(token)
+      if token == "("
+        @operators.push("(")
+      elsif token == ")"
+        balance_parenthesis
+      elsif is_number?(token)
         append_token(token)
       else
         append_operator(token)
@@ -46,6 +63,13 @@ class ShuntingYardAlgorithm
       formatted_output += token + " "
     end
     formatted_output[0..-2]
+  end
+
+  def balance_parenthesis
+    while !@operators.peek.eql?("(")
+      append_token(@operators.pop)
+    end
+    @operators.pop
   end
 
   def is_number?(token)
