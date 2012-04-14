@@ -64,4 +64,16 @@ describe ShuntingYardAlgorithm do
     subject.post_fix("( 1 +    2   ) *   3 /   4").should == "1 2 + 3 * 4 /"
   end
 
+  it "raises parenthesis mismatch when there's no open paren for a closed one" do
+    expect do
+      subject.post_fix("1 + 2 ) * 3")
+    end.should raise_error(ParenthesisMismatch)
+  end
+
+  it "raises parenthesis mismatch when there's no close paren fo an opened one" do
+    expect do
+      subject.post_fix("( 1 + 2 * 3")
+    end.should raise_error(ParenthesisMismatch)
+  end
+
 end

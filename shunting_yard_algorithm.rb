@@ -53,7 +53,9 @@ class ShuntingYardAlgorithm
 
   def append_remaining_tokens
     while !@operators.empty?
-      @output << @operators.pop
+      token = @operators.pop
+      raise ParenthesisMismatch if token.eql?("(")
+      @output << token 
     end
   end
 
@@ -66,9 +68,10 @@ class ShuntingYardAlgorithm
   end
 
   def balance_parenthesis
-    while !@operators.peek.eql?("(")
+    while !@operators.empty? && !@operators.peek.eql?("(") 
       append_token(@operators.pop)
     end
+    raise ParenthesisMismatch if @operators.empty?
     @operators.pop
   end
 
@@ -101,4 +104,7 @@ class ShuntingYardAlgorithm
     return 0
   end
 
+end
+
+class ParenthesisMismatch < Exception
 end
