@@ -1,0 +1,7 @@
+This is a ruby implementation of Shunting-Yard-Algorithm which
+convert mathematical expressions to their post-fix format.
+I tried to push as much as I can so you can track different versions
+and see the differences clearly. What tests I added in each step and
+what changes and Refactorings I made for DRY, more expressiveness, etc.
+
+Hope you'll enjoy. I appreciate your great feedbacks.
