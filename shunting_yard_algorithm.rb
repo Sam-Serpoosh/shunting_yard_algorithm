@@ -39,10 +39,12 @@ class ShuntingYardAlgorithm
 
   def process_tokens(tokens)
     tokens.each do |token|
-      if token == "("
+      if token == ","
+        append_token_until_open_parentheses
+      elsif token == "("
         @operators.push("(")
       elsif token == ")"
-        balance_parenthesis
+        balance_parentheses
       elsif is_number?(token)
         append_token(token)
       else
@@ -54,7 +56,7 @@ class ShuntingYardAlgorithm
   def append_remaining_tokens
     while !@operators.empty?
       token = @operators.pop
-      raise ParenthesisMismatch if token.eql?("(")
+      raise ParenthesesMismatch if token.eql?("(")
       @output << token 
     end
   end
@@ -67,16 +69,28 @@ class ShuntingYardAlgorithm
     formatted_output[0..-2]
   end
 
-  def balance_parenthesis
+  def balance_parentheses
+    append_token_until_open_parentheses
+    throw_away_open_parentheses
+  end
+  
+  def append_token_until_open_parentheses
     while !@operators.empty? && !@operators.peek.eql?("(") 
       append_token(@operators.pop)
     end
-    raise ParenthesisMismatch if @operators.empty?
+    raise ParenthesesMismatch if @operators.empty?
+  end
+
+  def throw_away_open_parentheses
     @operators.pop
   end
 
   def is_number?(token)
     !!(token =~ /\d+/)
+  end
+
+  def is_function?(token)
+    !!(token =~ /\w+/)
   end
 
   def append_token(token)
@@ -100,11 +114,13 @@ class ShuntingYardAlgorithm
       return 1
     elsif token == "*" || token == "/"
       return 2
+    elsif is_function?(token)
+      return 3
     end
     return 0
   end
 
 end
 
-class ParenthesisMismatch < Exception
+class ParenthesesMismatch < Exception
 end
